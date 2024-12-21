@@ -62,7 +62,7 @@
 @keyframes quantum-pulse {
   0%, 100% { 
     transform: scale(1);
-    opacity: 0.5;
+    opacity: 0.8;
   }
   50% { 
     transform: scale(1.05);
@@ -71,7 +71,7 @@
 }
 
 .quantum-pulse {
-  animation: quantum-pulse 2s ease-in-out infinite;
+  animation: quantum-pulse 3s ease-in-out infinite;
 }
 
 /* Smooth transitions */
@@ -80,37 +80,46 @@
 }
 
 /* Enhanced card hover effects */
+.card-container {
+  perspective: 1000px;
+}
+
 .card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
+  transform: translateY(-8px) rotateX(4deg);
+  box-shadow: 
+    0 20px 40px -10px rgba(139, 92, 246, 0.3),
+    0 0 20px -5px rgba(139, 92, 246, 0.2);
 }
 
-/* Bootstrap overrides and custom styles */
+/* Form elements styling */
 .btn-outline-purple {
-  border-color: #8B5CF6;
-  color: #8B5CF6;
-}
-
-.btn-outline-purple:hover {
-  background-color: #8B5CF6;
-  color: white;
+  @apply border-2 border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white transition-all duration-300;
 }
 
 .form-range {
-  accent-color: #8B5CF6;
+  @apply appearance-none bg-transparent cursor-pointer;
 }
 
-/* Responsive card adjustments */
+.form-range::-webkit-slider-thumb {
+  @apply appearance-none w-4 h-4 rounded-full bg-purple-500 border-2 border-purple-300 cursor-pointer;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  @apply bg-purple-900/50 rounded-full h-2;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .card {
-    margin-bottom: 1rem;
+    @apply mb-4;
   }
   
   .display-4 {
-    font-size: 2rem;
+    @apply text-3xl;
   }
 }

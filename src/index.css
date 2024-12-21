@@ -72,3 +72,39 @@
 .transition-quantum {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* Bootstrap overrides and custom styles */
+.btn-outline-purple {
+  border-color: #8B5CF6;
+  color: #8B5CF6;
+}
+
+.btn-outline-purple:hover {
+  background-color: #8B5CF6;
+  color: white;
+}
+
+.form-range {
+  accent-color: #8B5CF6;
+}
+
+/* Responsive card adjustments */
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 1rem;
+  }
+  
+  .display-4 {
+    font-size: 2rem;
+  }
+}
+
+/* Enhanced card hover effects */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+}

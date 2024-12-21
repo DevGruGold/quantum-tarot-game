@@ -58,19 +58,35 @@
   }
 }
 
-/* Custom animations */
-@keyframes glow {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+/* Enhanced quantum animations */
+@keyframes quantum-pulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% { 
+    transform: scale(1.05);
+    opacity: 1;
+  }
 }
 
-.quantum-glow {
-  animation: glow 2s ease-in-out infinite;
+.quantum-pulse {
+  animation: quantum-pulse 2s ease-in-out infinite;
 }
 
 /* Smooth transitions */
 .transition-quantum {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced card hover effects */
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
 }
 
 /* Bootstrap overrides and custom styles */
@@ -97,14 +113,4 @@
   .display-4 {
     font-size: 2rem;
   }
-}
-
-/* Enhanced card hover effects */
-.card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
 }

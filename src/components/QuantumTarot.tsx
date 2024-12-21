@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { tarotDeck } from '@/data/tarotDeck';
 import { initializeAudioContext, createOscillators } from '@/utils/audioUtils';
+import { selectRandomCard } from '@/utils/cardUtils';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const QuantumTarot = () => {
@@ -97,15 +98,7 @@ const QuantumTarot = () => {
     }
   };
 
-  // Card selection with quantum entropy
-  const selectRandomCard = (timePosition: string) => {
-    const PHI = 1.618033988749895;
-    const entropy = Number(time) + performance.now();
-    const cardIndex = Math.floor(Math.abs(Math.sin(entropy * PHI)) * tarotDeck.major.length);
-    return tarotDeck.major[cardIndex];
-  };
-
-  const handlePositionSelect = (position) => {
+  const handlePositionSelect = (position: any) => {
     if (selectedPosition?.id === position.id) {
       setSelectedPosition(null);
       setIsRunning(false);
@@ -115,47 +108,56 @@ const QuantumTarot = () => {
       setSelectedPosition(position);
       setIsRunning(true);
       startAudio(position);
+      setResonanceLevel(0); // Reset resonance level for new selection
     }
   };
 
-  // Animation loop
+  // Animation loop with enhanced visual-audio sync
   useEffect(() => {
-    let frameId;
+    let frameId: number;
     if (isRunning) {
       const animate = () => {
-        setTime(t => (t + 0.02) % (Math.PI * 2));
+        setTime(t => {
+          // Slower time progression for more visible vibrations
+          const newTime = (t + 0.01) % (Math.PI * 2);
+          return newTime;
+        });
         frameId = requestAnimationFrame(animate);
       };
       frameId = requestAnimationFrame(animate);
     }
     return () => {
-      cancelAnimationFrame(frameId);
+      if (frameId) cancelAnimationFrame(frameId);
     };
   }, [isRunning]);
 
-  // Resonance effect and card reveal
+  // Modified resonance effect and card reveal
   useEffect(() => {
-    let interval;
+    let interval: NodeJS.Timeout;
     if (isRunning && selectedPosition && !cardData[selectedPosition.id]) {
       interval = setInterval(() => {
         setResonanceLevel(prev => {
-          const newLevel = Math.min(prev + 0.02, 1);
+          // Slower resonance build-up
+          const newLevel = Math.min(prev + 0.005, 1);
           if (newLevel >= 1) {
             // Select and reveal card
-            const card = selectRandomCard(selectedPosition.id);
+            const card = selectRandomCard(time);
             setCardData(prev => ({
               ...prev,
               [selectedPosition.id]: card
             }));
-            stopAudio();
-            setIsRunning(false);
+            // Don't stop the audio immediately
+            setTimeout(() => {
+              stopAudio();
+              setIsRunning(false);
+            }, 1000); // Let the audio play for 1 more second after card reveal
           }
           return newLevel;
         });
-      }, 100);
+      }, 50); // Faster update interval for smoother animation
     }
     return () => clearInterval(interval);
-  }, [isRunning, selectedPosition]);
+  }, [isRunning, selectedPosition, time]);
 
   // Cleanup on unmount
   useEffect(() => {

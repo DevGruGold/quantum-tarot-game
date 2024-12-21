@@ -1,18 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { tarotDeck } from '@/data/tarotDeck';
+import { initializeAudioContext, createOscillators } from '@/utils/audioUtils';
 
 const QuantumTarot = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [time, setTime] = useState(0);
-  const [selectedPosition, setSelectedPosition] = useState(null);
+  const [selectedPosition, setSelectedPosition] = useState<any>(null);
   const [volume, setVolume] = useState(0.3);
   const [audioInitialized, setAudioInitialized] = useState(false);
   const [resonanceLevel, setResonanceLevel] = useState(0);
-  const [cardData, setCardData] = useState({});
+  const [cardData, setCardData] = useState<Record<string, any>>({});
 
-  const audioContextRef = useRef(null);
-  const oscillatorsRef = useRef({ left: null, right: null });
-  const gainNodeRef = useRef(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const oscillatorsRef = useRef<any>({ left: null, right: null });
+  const gainNodeRef = useRef<any>(null);
 
   const positions = [
     { 
@@ -47,88 +49,37 @@ const QuantumTarot = () => {
     }
   ];
 
-  // Tarot card database with quantum interpretations
-  const tarotDeck = {
-    major: [
-      {
-        id: 0,
-        name: "The Fool",
-        quantum: "Superposition of all possibilities",
-        astro: "Uranus - Sudden awakening",
-        past: "Untaken quantum leaps",
-        present: "Active probability collapse",
-        future: "Emerging timelines"
-      },
-      {
-        id: 1,
-        name: "The Magician",
-        quantum: "Conscious wave collapse",
-        astro: "Mercury - Communication",
-        past: "Previous manifestation point",
-        present: "Active creation",
-        future: "Timeline manipulation"
-      }
-    ]
-  };
-
   // Initialize Audio Context
   const initializeAudio = async () => {
-    try {
-      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
-      await audioContextRef.current.resume();
+    const context = await initializeAudioContext();
+    if (context) {
+      audioContextRef.current = context;
       setAudioInitialized(true);
-    } catch (error) {
-      console.error("Audio initialization failed:", error);
     }
   };
 
   // Start Audio
-  const startAudio = (position) => {
+  const startAudio = (position: any) => {
     if (!audioContextRef.current) return;
     
     stopAudio(); // Clean up existing audio
 
     try {
-      // Create oscillators
-      const leftOsc = audioContextRef.current.createOscillator();
-      const rightOsc = audioContextRef.current.createOscillator();
-      const gainNode = audioContextRef.current.createGain();
-
-      // Set up stereo panning
-      const leftPanner = audioContextRef.current.createStereoPanner();
-      const rightPanner = audioContextRef.current.createStereoPanner();
-      leftPanner.pan.value = -1;
-      rightPanner.pan.value = 1;
-
-      // Configure frequencies
-      leftOsc.frequency.setValueAtTime(position.baseFreq, audioContextRef.current.currentTime);
-      rightOsc.frequency.setValueAtTime(
-        position.baseFreq + position.binauralFreq,
-        audioContextRef.current.currentTime
+      const { leftOsc, rightOsc, gainNode } = createOscillators(
+        audioContextRef.current,
+        position,
+        volume
       );
 
-      // Set volume
-      gainNode.gain.setValueAtTime(volume, audioContextRef.current.currentTime);
-
-      // Connect nodes
-      leftOsc.connect(leftPanner);
-      rightOsc.connect(rightPanner);
-      leftPanner.connect(gainNode);
-      rightPanner.connect(gainNode);
-      gainNode.connect(audioContextRef.current.destination);
-
-      // Store references and start
       oscillatorsRef.current = { left: leftOsc, right: rightOsc };
       gainNodeRef.current = gainNode;
       leftOsc.start();
       rightOsc.start();
-
     } catch (error) {
       console.error("Error starting audio:", error);
     }
   };
 
-  // Stop Audio
   const stopAudio = () => {
     try {
       if (oscillatorsRef.current.left) {
@@ -146,14 +97,13 @@ const QuantumTarot = () => {
   };
 
   // Card selection with quantum entropy
-  const selectRandomCard = (timePosition) => {
+  const selectRandomCard = (timePosition: string) => {
     const PHI = 1.618033988749895;
-    const entropy = time + performance.now();
+    const entropy = Number(time) + performance.now();
     const cardIndex = Math.floor(Math.abs(Math.sin(entropy * PHI)) * tarotDeck.major.length);
     return tarotDeck.major[cardIndex];
   };
 
-  // Handle position selection
   const handlePositionSelect = (position) => {
     if (selectedPosition?.id === position.id) {
       setSelectedPosition(null);

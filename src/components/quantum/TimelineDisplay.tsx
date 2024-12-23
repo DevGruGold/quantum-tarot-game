@@ -27,15 +27,15 @@ const TimelineDisplay = ({
 
     return positions.map((pos, index) => ({
       ...pos,
-      x: 200, // Center horizontally
-      y: 150 + (index * 200), // Stack vertically with spacing
+      x: 175, // Centered horizontally
+      y: 120 + (index * 180), // Reduced vertical spacing
     }));
   };
 
   const adjustedPositions = getAdjustedPositions(positions);
 
   return (
-    <div className={`relative ${isMobile ? 'h-[700px]' : 'aspect-[16/9]'} bg-black/60 rounded-2xl overflow-hidden border border-purple-500/20 shadow-inner`}>
+    <div className={`relative ${isMobile ? 'h-[600px]' : 'aspect-[16/9]'} bg-black/60 rounded-xl overflow-hidden border border-purple-500/20 shadow-inner mx-auto ${isMobile ? 'max-w-[350px]' : ''}`}>
       <svg width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
         <defs>
           <radialGradient id="cardGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">

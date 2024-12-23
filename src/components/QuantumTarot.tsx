@@ -222,14 +222,23 @@ const QuantumTarot = () => {
                   </defs>
                   
                   {positions.map((pos) => {
-                    const vibration = selectedPosition?.id === pos.id 
-                      ? Math.sin(time * pos.baseFreq/100) * 5 
+                    // Calculate frequency-based vibration that stays in formation
+                    const baseVibration = selectedPosition?.id === pos.id 
+                      ? Math.sin(time * (pos.baseFreq/200)) * 3 // Reduced amplitude, adjusted frequency
                       : 0;
+                    
+                    // Calculate position-specific offsets
+                    const xOffset = pos.id === 'past' ? -baseVibration : 
+                                  pos.id === 'future' ? baseVibration : 
+                                  Math.sin(time * 2) * baseVibration;
+                    
+                    const yOffset = pos.id === 'present' ? 
+                                  Math.cos(time * (pos.baseFreq/300)) * 2 : 0;
 
                     return (
                       <g 
                         key={pos.id}
-                        transform={`translate(${pos.x + vibration}, ${pos.y})`}
+                        transform={`translate(${pos.x + xOffset}, ${pos.y + yOffset})`}
                         onClick={() => handlePositionSelect(pos)}
                         className="cursor-pointer transition-transform duration-300 hover:scale-105"
                       >

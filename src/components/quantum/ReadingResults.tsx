@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ReadingResultsProps {
   positions: any[];
@@ -7,23 +8,25 @@ interface ReadingResultsProps {
 }
 
 const ReadingResults = ({ positions, selectedPosition, cardData }: ReadingResultsProps) => {
+  const isMobile = useIsMobile();
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-3 gap-6'}`}>
       {positions.map(pos => (
         <div key={pos.id} className="card-container">
           <div 
-            className={`card h-full border rounded-xl p-6 backdrop-blur-sm transition-all ${
+            className={`card h-full border rounded-xl p-4 backdrop-blur-sm transition-all ${
               selectedPosition?.id === pos.id 
                 ? 'bg-purple-900/40 border-purple-500/50 shadow-lg shadow-purple-500/20' 
                 : 'bg-black/20 border-purple-500/10 hover:border-purple-500/30'
             }`}
           >
-            <h3 className="text-xl font-semibold mb-4" style={{ color: pos.color }}>
+            <h3 className="text-xl font-semibold mb-3" style={{ color: pos.color }}>
               {pos.id.toUpperCase()}
             </h3>
             
             {cardData[pos.id] ? (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <div className="text-lg font-bold text-white">
                   {cardData[pos.id].name}
                 </div>

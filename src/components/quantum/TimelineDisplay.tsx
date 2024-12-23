@@ -1,5 +1,6 @@
 import React from 'react';
 import CardPosition from './CardPosition';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TimelineDisplayProps {
   positions: any[];
@@ -18,8 +19,23 @@ const TimelineDisplay = ({
   resonanceLevel,
   handlePositionSelect
 }: TimelineDisplayProps) => {
+  const isMobile = useIsMobile();
+
+  // Adjust positions for mobile portrait mode
+  const getAdjustedPositions = (positions: any[]) => {
+    if (!isMobile) return positions;
+
+    return positions.map((pos, index) => ({
+      ...pos,
+      x: 200, // Center horizontally
+      y: 150 + (index * 200), // Stack vertically with spacing
+    }));
+  };
+
+  const adjustedPositions = getAdjustedPositions(positions);
+
   return (
-    <div className="relative aspect-[16/9] bg-black/60 rounded-2xl overflow-hidden border border-purple-500/20 shadow-inner">
+    <div className={`relative ${isMobile ? 'h-[700px]' : 'aspect-[16/9]'} bg-black/60 rounded-2xl overflow-hidden border border-purple-500/20 shadow-inner`}>
       <svg width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
         <defs>
           <radialGradient id="cardGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
@@ -28,7 +44,7 @@ const TimelineDisplay = ({
           </radialGradient>
         </defs>
         
-        {positions.map((position) => (
+        {adjustedPositions.map((position) => (
           <CardPosition
             key={position.id}
             position={position}

@@ -30,7 +30,6 @@ const QuantumTarot = () => {
       binauralFreq: 7.83,
       x: 100, 
       y: 200,
-      description: 'Past Timeline Resonance',
       icon: '◐'
     },
     { 
@@ -40,7 +39,6 @@ const QuantumTarot = () => {
       binauralFreq: 40,
       x: 200, 
       y: 150,
-      description: 'Present Moment Alignment',
       icon: '◉'
     },
     { 
@@ -50,7 +48,6 @@ const QuantumTarot = () => {
       binauralFreq: 12,
       x: 300, 
       y: 200,
-      description: 'Future Timeline Potential',
       icon: '◑'
     }
   ];

@@ -9,8 +9,11 @@ const Header = () => {
       <h1 className={`${isMobile ? 'text-3xl' : 'text-5xl md:text-6xl'} font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-teal-400 mb-2 quantum-pulse`}>
         Quantum Tarot™
       </h1>
-      <p className={`${isMobile ? 'text-sm' : 'text-lg'} text-purple-200 opacity-80`}>
+      <p className={`${isMobile ? 'text-sm' : 'text-lg'} text-purple-200 opacity-80 mb-2`}>
         Harmonically Aligned Timeline Reading
+      </p>
+      <p className="text-xs text-purple-300/70 max-w-md mx-auto">
+        For optimal frequency alignment, place one thumb on the glowing card indicator and one on the table surface during reading
       </p>
     </div>
   );

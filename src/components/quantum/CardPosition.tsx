@@ -17,12 +17,11 @@ const CardPosition = ({
   resonanceLevel,
   handlePositionSelect 
 }: CardPositionProps) => {
-  // Enhanced frequency-based vibration calculations
   const getVibrationPattern = () => {
     if (selectedPosition?.id !== position.id) return { x: 0, y: 0 };
     
-    const baseAmplitude = 2; // Reduced amplitude for better formation
-    const timeScale = position.baseFreq / 100; // Scaled to base frequency
+    const baseAmplitude = 2;
+    const timeScale = position.baseFreq / 100;
     
     switch (position.id) {
       case 'past':
@@ -47,6 +46,28 @@ const CardPosition = ({
 
   const vibration = getVibrationPattern();
 
+  // Frequency visualization patterns
+  const getFrequencyPattern = () => {
+    if (selectedPosition?.id !== position.id) return [];
+    
+    const points = [];
+    const segments = 12;
+    const radius = 45;
+    
+    for (let i = 0; i < segments; i++) {
+      const angle = (i / segments) * Math.PI * 2;
+      const frequency = position.baseFreq / 100;
+      const amplitude = Math.sin(time * frequency + i) * 5;
+      const x = Math.cos(angle) * (radius + amplitude);
+      const y = Math.sin(angle) * (radius + amplitude);
+      points.push(`${x},${y}`);
+    }
+    
+    return points;
+  };
+
+  const frequencyPoints = getFrequencyPattern();
+
   return (
     <g 
       transform={`translate(${position.x + vibration.x}, ${position.y + vibration.y})`}
@@ -61,6 +82,30 @@ const CardPosition = ({
           0.3 + Math.sin(time * 2) * 0.1 : 
           0.1 + Math.sin(time * 1.5) * 0.05}
       />
+      
+      {/* Frequency visualization ring */}
+      {selectedPosition?.id === position.id && (
+        <>
+          <polygon
+            points={frequencyPoints.join(' ')}
+            fill="none"
+            stroke={position.color}
+            strokeWidth="0.5"
+            opacity={0.3 + Math.sin(time * 2) * 0.2}
+            className="animate-pulse"
+          />
+          {/* Touch instruction indicator */}
+          <circle
+            r="8"
+            cy="35"
+            fill={position.color}
+            opacity={0.3 + Math.sin(time * 3) * 0.2}
+            className="animate-pulse"
+          >
+            <title>Place thumb here for reading</title>
+          </circle>
+        </>
+      )}
       
       {/* Card base */}
       <rect

@@ -20,27 +20,27 @@ const CardPosition = ({
   isMobile
 }: CardPositionProps) => {
   const getVibrationPattern = () => {
-    // Only apply vibration when selected, regardless of device type
+    // Only apply vibration when selected
     if (selectedPosition?.id !== position.id) return { x: 0, y: 0 };
     
-    const baseAmplitude = 2;
+    const baseAmplitude = 1.5; // Reduced amplitude for more stable formation
     const timeScale = position.baseFreq / 100;
     
     switch (position.id) {
       case 'past':
         return {
-          x: -Math.sin(time * timeScale) * baseAmplitude,
-          y: Math.cos(time * timeScale) * (baseAmplitude * 0.5)
+          x: -Math.sin(time * timeScale) * baseAmplitude * 0.5,
+          y: Math.cos(time * timeScale) * baseAmplitude * 0.3
         };
       case 'present':
         return {
-          x: Math.cos(time * timeScale) * (baseAmplitude * 0.3),
-          y: Math.sin(time * timeScale) * baseAmplitude
+          x: Math.cos(time * timeScale) * baseAmplitude * 0.3,
+          y: Math.sin(time * timeScale) * baseAmplitude * 0.5
         };
       case 'future':
         return {
-          x: Math.sin(time * timeScale) * baseAmplitude,
-          y: Math.cos(time * timeScale) * (baseAmplitude * 0.5)
+          x: Math.sin(time * timeScale) * baseAmplitude * 0.5,
+          y: Math.cos(time * timeScale) * baseAmplitude * 0.3
         };
       default:
         return { x: 0, y: 0 };
@@ -75,7 +75,7 @@ const CardPosition = ({
     <g 
       transform={`translate(${position.x + vibration.x}, ${position.y + vibration.y})`}
       onClick={() => handlePositionSelect(position)}
-      className={`cursor-pointer ${isMobile ? 'transition-transform duration-300 hover:scale-105' : ''}`}
+      className="cursor-pointer transition-transform duration-300"
     >
       {/* Quantum resonance field */}
       <circle
@@ -88,26 +88,14 @@ const CardPosition = ({
       
       {/* Frequency visualization ring */}
       {selectedPosition?.id === position.id && (
-        <>
-          <polygon
-            points={frequencyPoints.join(' ')}
-            fill="none"
-            stroke={position.color}
-            strokeWidth="0.5"
-            opacity={0.3 + Math.sin(time * 2) * 0.2}
-            className="animate-pulse"
-          />
-          {/* Touch instruction indicator */}
-          <circle
-            r="8"
-            cy="35"
-            fill={position.color}
-            opacity={0.3 + Math.sin(time * 3) * 0.2}
-            className="animate-pulse"
-          >
-            <title>Place thumb here for reading</title>
-          </circle>
-        </>
+        <polygon
+          points={frequencyPoints.join(' ')}
+          fill="none"
+          stroke={position.color}
+          strokeWidth="0.5"
+          opacity={0.3 + Math.sin(time * 2) * 0.2}
+          className="animate-pulse"
+        />
       )}
       
       {/* Card base */}

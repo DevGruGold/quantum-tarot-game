@@ -7,6 +7,7 @@ import Header from './quantum/Header';
 import AudioControls from './quantum/AudioControls';
 import TimelineDisplay from './quantum/TimelineDisplay';
 import ReadingResults from './quantum/ReadingResults';
+import { useToast } from "@/components/ui/use-toast";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const QuantumTarot = () => {
@@ -17,7 +18,9 @@ const QuantumTarot = () => {
   const [audioInitialized, setAudioInitialized] = useState(false);
   const [resonanceLevel, setResonanceLevel] = useState(0);
   const [cardData, setCardData] = useState<Record<string, any>>({});
+  const [thumbsPlaced, setThumbsPlaced] = useState({ left: false, right: false });
 
+  const { toast } = useToast();
   const audioContextRef = useRef<AudioContext | null>(null);
   const oscillatorsRef = useRef<any>({ left: null, right: null });
   const gainNodeRef = useRef<any>(null);
@@ -113,6 +116,32 @@ const QuantumTarot = () => {
     }
   };
 
+  const handleThumbPlacement = (side: 'left' | 'right') => {
+    setThumbsPlaced(prev => {
+      const newState = { ...prev, [side]: !prev[side] };
+      
+      // If both thumbs are now placed, start the reading process
+      if (newState.left && newState.right && selectedPosition) {
+        startReading();
+      }
+      
+      return newState;
+    });
+  };
+
+  const startReading = () => {
+    if (!selectedPosition) return;
+    
+    setIsRunning(true);
+    startAudio(selectedPosition);
+    setResonanceLevel(0);
+    
+    toast({
+      title: "Reading initiated",
+      description: "Keep your thumbs in place while the frequencies align...",
+    });
+  };
+
   // Animation loop with enhanced visual-audio sync
   useEffect(() => {
     let frameId: number;
@@ -135,30 +164,28 @@ const QuantumTarot = () => {
   // Modified resonance effect and card reveal
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (isRunning && selectedPosition && !cardData[selectedPosition.id]) {
+    if (isRunning && selectedPosition && !cardData[selectedPosition.id] && thumbsPlaced.left && thumbsPlaced.right) {
       interval = setInterval(() => {
         setResonanceLevel(prev => {
-          // Slower resonance build-up
           const newLevel = Math.min(prev + 0.005, 1);
           if (newLevel >= 1) {
-            // Select and reveal card
             const card = selectRandomCard(time);
             setCardData(prev => ({
               ...prev,
               [selectedPosition.id]: card
             }));
-            // Don't stop the audio immediately
             setTimeout(() => {
               stopAudio();
               setIsRunning(false);
-            }, 1000); // Let the audio play for 1 more second after card reveal
+              setThumbsPlaced({ left: false, right: false });
+            }, 1000);
           }
           return newLevel;
         });
-      }, 50); // Faster update interval for smoother animation
+      }, 50);
     }
     return () => clearInterval(interval);
-  }, [isRunning, selectedPosition, time]);
+  }, [isRunning, selectedPosition, time, thumbsPlaced]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -204,6 +231,31 @@ const QuantumTarot = () => {
             </div>
           </CardContent>
         </Card>
+        
+        {/* Thumbprint areas */}
+        <div className="thumbprint-areas">
+          {/* Left thumbprint */}
+          <div 
+            onClick={() => handleThumbPlacement('left')}
+            className="cursor-pointer"
+            style={{ position: 'absolute', left: '60px', bottom: '20px' }}
+          >
+            <div className="thumbprint" style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(88, 28, 135, 0.8)', opacity: thumbsPlaced.left ? 1 : 0.5 }}>
+              <span className="tooltip">Place left thumb here</span>
+            </div>
+          </div>
+          
+          {/* Right thumbprint */}
+          <div 
+            onClick={() => handleThumbPlacement('right')}
+            className="cursor-pointer"
+            style={{ position: 'absolute', right: '60px', bottom: '20px' }}
+          >
+            <div className="thumbprint" style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(88, 28, 135, 0.8)', opacity: thumbsPlaced.right ? 1 : 0.5 }}>
+              <span className="tooltip">Place right thumb here</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

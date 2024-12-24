@@ -28,7 +28,7 @@ const TimelineDisplay = ({
       return positions.map((pos, index) => ({
         ...pos,
         x: 150 + (index * 150), // Spread cards horizontally
-        y: 200, // Keep them at the same vertical position
+        y: 180, // Keep them at the same vertical position
       }));
     }
 
@@ -59,7 +59,36 @@ const TimelineDisplay = ({
             <stop offset="0%" stopColor="rgba(139, 92, 246, 0.3)" />
             <stop offset="100%" stopColor="rgba(139, 92, 246, 0)" />
           </radialGradient>
+          <radialGradient id="thumbprintGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+            <stop offset="0%" stopColor="rgba(88, 28, 135, 0.8)" />
+            <stop offset="100%" stopColor="rgba(88, 28, 135, 0)" />
+          </radialGradient>
         </defs>
+
+        {/* Thumbprint areas */}
+        <g className="thumbprint-areas">
+          {/* Left thumbprint */}
+          <circle
+            cx="60"
+            cy="350"
+            r="30"
+            fill="url(#thumbprintGlow)"
+            className="cursor-pointer animate-pulse opacity-70"
+          >
+            <title>Place left thumb here</title>
+          </circle>
+          
+          {/* Right thumbprint */}
+          <circle
+            cx={isMobile ? "290" : "740"}
+            cy="350"
+            r="30"
+            fill="url(#thumbprintGlow)"
+            className="cursor-pointer animate-pulse opacity-70"
+          >
+            <title>Place right thumb here</title>
+          </circle>
+        </g>
         
         {adjustedPositions.map((position) => (
           <CardPosition

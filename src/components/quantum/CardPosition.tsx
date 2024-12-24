@@ -1,4 +1,5 @@
 import React from 'react';
+import { Progress } from "@/components/ui/progress";
 
 interface CardPositionProps {
   position: any;
@@ -113,6 +114,16 @@ const CardPosition = ({
         strokeWidth="1.5"
         className="shadow-lg"
       />
+      
+      {/* Progress bar */}
+      {selectedPosition?.id === position.id && !cardData[position.id] && (
+        <foreignObject x="-25" y="25" width="50" height="10">
+          <Progress 
+            value={resonanceLevel * 100} 
+            className="h-1 w-full bg-white/20"
+          />
+        </foreignObject>
+      )}
       
       {/* Card content */}
       {cardData[position.id] ? (

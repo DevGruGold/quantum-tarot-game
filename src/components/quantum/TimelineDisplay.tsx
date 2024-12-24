@@ -23,20 +23,37 @@ const TimelineDisplay = ({
 
   // Adjust positions for mobile portrait mode
   const getAdjustedPositions = (positions: any[]) => {
-    if (!isMobile) return positions;
+    if (!isMobile) {
+      // Desktop layout - cards in horizontal formation
+      return positions.map((pos, index) => ({
+        ...pos,
+        x: 150 + (index * 150), // Spread cards horizontally
+        y: 200, // Keep them at the same vertical position
+      }));
+    }
 
+    // Mobile layout - cards stacked vertically
     return positions.map((pos, index) => ({
       ...pos,
       x: 175, // Centered horizontally
-      y: 120 + (index * 180), // Reduced vertical spacing
+      y: 120 + (index * 180), // Stacked vertically with spacing
     }));
   };
 
   const adjustedPositions = getAdjustedPositions(positions);
 
   return (
-    <div className={`relative ${isMobile ? 'h-[600px]' : 'aspect-[16/9]'} bg-black/60 rounded-xl overflow-hidden border border-purple-500/20 shadow-inner mx-auto ${isMobile ? 'max-w-[350px]' : ''}`}>
-      <svg width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+    <div 
+      className={`relative ${isMobile ? 'h-[600px]' : 'h-[400px]'} 
+        bg-black/60 rounded-xl overflow-hidden border border-purple-500/20 
+        shadow-inner mx-auto ${isMobile ? 'max-w-[350px]' : 'max-w-[800px]'}`}
+    >
+      <svg 
+        width="100%" 
+        height="100%" 
+        preserveAspectRatio="xMidYMid meet" 
+        className={isMobile ? '' : 'scale-90'}
+      >
         <defs>
           <radialGradient id="cardGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
             <stop offset="0%" stopColor="rgba(139, 92, 246, 0.3)" />
@@ -53,6 +70,7 @@ const TimelineDisplay = ({
             cardData={cardData}
             resonanceLevel={resonanceLevel}
             handlePositionSelect={handlePositionSelect}
+            isMobile={isMobile}
           />
         ))}
       </svg>

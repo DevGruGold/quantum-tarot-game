@@ -7,6 +7,7 @@ interface CardPositionProps {
   cardData: Record<string, any>;
   resonanceLevel: number;
   handlePositionSelect: (position: any) => void;
+  isMobile: boolean;
 }
 
 const CardPosition = ({ 
@@ -15,9 +16,11 @@ const CardPosition = ({
   time, 
   cardData, 
   resonanceLevel,
-  handlePositionSelect 
+  handlePositionSelect,
+  isMobile
 }: CardPositionProps) => {
   const getVibrationPattern = () => {
+    // Only apply vibration when selected, regardless of device type
     if (selectedPosition?.id !== position.id) return { x: 0, y: 0 };
     
     const baseAmplitude = 2;
@@ -72,7 +75,7 @@ const CardPosition = ({
     <g 
       transform={`translate(${position.x + vibration.x}, ${position.y + vibration.y})`}
       onClick={() => handlePositionSelect(position)}
-      className="cursor-pointer transition-transform duration-300 hover:scale-105"
+      className={`cursor-pointer ${isMobile ? 'transition-transform duration-300 hover:scale-105' : ''}`}
     >
       {/* Quantum resonance field */}
       <circle
@@ -123,50 +126,6 @@ const CardPosition = ({
         className="shadow-lg"
       />
       
-      {/* Quantum alignment indicators */}
-      {selectedPosition?.id === position.id && !cardData[position.id] && (
-        <>
-          <circle
-            r={20 + Math.sin(time * position.baseFreq/100) * 5}
-            fill="none"
-            stroke={position.color}
-            strokeWidth="1.5"
-            opacity={0.3 + Math.sin(time * 2) * 0.2}
-          >
-            <animate
-              attributeName="r"
-              values="20;25;20"
-              dur="2s"
-              repeatCount="indefinite"
-            />
-          </circle>
-          
-          {/* Resonance progress */}
-          <g transform="translate(0, 35)">
-            <rect
-              x="-20"
-              y="0"
-              width="40"
-              height="3"
-              rx="1.5"
-              fill="none"
-              stroke={position.color}
-              strokeWidth="0.5"
-              opacity="0.3"
-            />
-            <rect
-              x="-20"
-              y="0"
-              width={40 * resonanceLevel}
-              height="3"
-              rx="1.5"
-              fill={position.color}
-              opacity={0.6 + Math.sin(time * 4) * 0.2}
-            />
-          </g>
-        </>
-      )}
-
       {/* Card content */}
       {cardData[position.id] ? (
         <>

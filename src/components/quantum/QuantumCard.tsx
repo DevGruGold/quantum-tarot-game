@@ -39,6 +39,7 @@ const QuantumCard = ({
       onClick={onClick}
       className={cn(
         "relative cursor-pointer rounded-lg p-6",
+        "bg-black/40 backdrop-blur-sm", // Added background for better visibility
         baseAnimation,
         !isSelected && hoverEffect
       )}
@@ -52,18 +53,20 @@ const QuantumCard = ({
       
       <div className={cn(
         "relative z-10 flex flex-col items-center justify-center",
-        "min-h-[200px] space-y-4"
+        "min-h-[200px] space-y-4",
+        "text-white" // Ensure text is always visible
       )}>
         {cardData ? (
           <>
             <h3 className="text-xl font-bold text-white">{cardData.name}</h3>
-            <span className="text-4xl">{position.icon}</span>
+            <span className="text-4xl opacity-90">{position.icon}</span>
             <div className="text-sm text-purple-200">{cardData.quantum}</div>
           </>
         ) : (
           <>
             <span className={cn(
               "text-5xl transition-all duration-300",
+              "opacity-90", // Ensure icon is always visible
               isSelected && "animate-pulse"
             )}>
               {position.icon}

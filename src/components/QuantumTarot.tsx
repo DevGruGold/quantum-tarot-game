@@ -112,21 +112,13 @@ const QuantumTarot = () => {
       setSelectedPosition(position);
       setIsRunning(true);
       startAudio(position);
-      setResonanceLevel(0); // Reset resonance level for new selection
+      setResonanceLevel(0);
+      startReading(); // Start reading immediately upon selection
     }
   };
 
   const handleThumbPlacement = (side: 'left' | 'right') => {
-    setThumbsPlaced(prev => {
-      const newState = { ...prev, [side]: !prev[side] };
-      
-      // If both thumbs are now placed, start the reading process
-      if (newState.left && newState.right && selectedPosition) {
-        startReading();
-      }
-      
-      return newState;
-    });
+    setThumbsPlaced(prev => ({ ...prev, [side]: !prev[side] }));
   };
 
   const startReading = () => {
@@ -138,11 +130,10 @@ const QuantumTarot = () => {
     
     toast({
       title: "Reading initiated",
-      description: "Keep your thumbs in place while the frequencies align...",
+      description: "The frequencies are aligning...",
     });
   };
 
-  // Animation loop with enhanced visual-audio sync
   useEffect(() => {
     let frameId: number;
     if (isRunning) {
@@ -161,13 +152,13 @@ const QuantumTarot = () => {
     };
   }, [isRunning]);
 
-  // Modified resonance effect and card reveal
+  // Modified resonance effect and card reveal - removed thumb placement requirement
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (isRunning && selectedPosition && !cardData[selectedPosition.id] && thumbsPlaced.left && thumbsPlaced.right) {
+    if (isRunning && selectedPosition && !cardData[selectedPosition.id]) {
       interval = setInterval(() => {
         setResonanceLevel(prev => {
-          const newLevel = Math.min(prev + 0.015, 1); // Increased from 0.005 to 0.015
+          const newLevel = Math.min(prev + 0.015, 1);
           if (newLevel >= 1) {
             const card = selectRandomCard(time);
             setCardData(prev => ({
@@ -185,9 +176,8 @@ const QuantumTarot = () => {
       }, 50);
     }
     return () => clearInterval(interval);
-  }, [isRunning, selectedPosition, time, thumbsPlaced]);
+  }, [isRunning, selectedPosition, time]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       stopAudio();
@@ -232,27 +222,25 @@ const QuantumTarot = () => {
           </CardContent>
         </Card>
         
-        {/* Thumbprint areas */}
+        {/* Thumbprint areas - kept for visual reference but no longer mandatory */}
         <div className="thumbprint-areas">
-          {/* Left thumbprint */}
           <div 
             onClick={() => handleThumbPlacement('left')}
             className="cursor-pointer"
             style={{ position: 'absolute', left: '60px', bottom: '20px' }}
           >
             <div className="thumbprint" style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(88, 28, 135, 0.8)', opacity: thumbsPlaced.left ? 1 : 0.5 }}>
-              <span className="tooltip">Place left thumb here</span>
+              <span className="tooltip">Optional: Place left thumb here</span>
             </div>
           </div>
           
-          {/* Right thumbprint */}
           <div 
             onClick={() => handleThumbPlacement('right')}
             className="cursor-pointer"
             style={{ position: 'absolute', right: '60px', bottom: '20px' }}
           >
             <div className="thumbprint" style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(88, 28, 135, 0.8)', opacity: thumbsPlaced.right ? 1 : 0.5 }}>
-              <span className="tooltip">Place right thumb here</span>
+              <span className="tooltip">Optional: Place right thumb here</span>
             </div>
           </div>
         </div>

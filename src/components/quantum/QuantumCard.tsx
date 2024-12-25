@@ -39,7 +39,7 @@ const QuantumCard = ({
       onClick={onClick}
       className={cn(
         "relative cursor-pointer rounded-lg p-6",
-        "bg-black/40 backdrop-blur-sm", // Added background for better visibility
+        "bg-black/40 backdrop-blur-sm",
         baseAnimation,
         !isSelected && hoverEffect
       )}
@@ -54,7 +54,7 @@ const QuantumCard = ({
       <div className={cn(
         "relative z-10 flex flex-col items-center justify-center",
         "min-h-[200px] space-y-4",
-        "text-white" // Ensure text is always visible
+        "text-white"
       )}>
         {cardData ? (
           <>
@@ -66,16 +66,21 @@ const QuantumCard = ({
           <>
             <span className={cn(
               "text-5xl transition-all duration-300",
-              "opacity-90", // Ensure icon is always visible
+              "opacity-90",
               isSelected && "animate-pulse"
             )}>
               {position.icon}
             </span>
             {isSelected && (
-              <Progress 
-                value={resonanceLevel * 100} 
-                className="w-32 h-1 bg-purple-900/20"
-              />
+              <div className="w-full space-y-2">
+                <Progress 
+                  value={resonanceLevel * 100} 
+                  className="h-2 w-full bg-purple-900/20"
+                />
+                <p className="text-xs text-center text-purple-200">
+                  Resonance: {Math.round(resonanceLevel * 100)}%
+                </p>
+              </div>
             )}
           </>
         )}

@@ -167,7 +167,7 @@ const QuantumTarot = () => {
     if (isRunning && selectedPosition && !cardData[selectedPosition.id] && thumbsPlaced.left && thumbsPlaced.right) {
       interval = setInterval(() => {
         setResonanceLevel(prev => {
-          const newLevel = Math.min(prev + 0.005, 1);
+          const newLevel = Math.min(prev + 0.015, 1); // Increased from 0.005 to 0.015
           if (newLevel >= 1) {
             const card = selectRandomCard(time);
             setCardData(prev => ({

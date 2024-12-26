@@ -193,7 +193,7 @@ const QuantumTarot = () => {
     <div className={cn(
       "min-h-screen py-8 px-4",
       "bg-gradient-to-b from-gray-900 via-purple-900 to-gray-900",
-      "text-purple-50"
+      "text-gray-50" // Changed to ensure light text on dark background
     )}>
       <div className="container mx-auto max-w-6xl">
         <Header />
@@ -206,7 +206,8 @@ const QuantumTarot = () => {
         <Card className={cn(
           "bg-black/40 backdrop-blur-lg",
           "border border-purple-500/20",
-          "shadow-2xl shadow-purple-500/10"
+          "shadow-2xl shadow-purple-500/10",
+          "text-gray-50" // Added to ensure light text
         )}>
           <CardHeader className="border-b border-purple-500/20">
             <AudioControls

@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { initializeAudioContext, createOscillators } from '@/utils/audioUtils';
 import { selectRandomCard } from '@/utils/cardUtils';
+import { getZodiacSign } from '@/utils/astroUtils';
 import Header from './quantum/Header';
 import AudioControls from './quantum/AudioControls';
 import QuantumTimeline from './quantum/QuantumTimeline';
 import ReadingResults from './quantum/ReadingResults';
 import ThumbprintArea from './quantum/ThumbprintArea';
+import BirthDateForm from './quantum/BirthDateForm';
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -43,11 +45,21 @@ const QuantumTarot = () => {
   const [resonanceLevel, setResonanceLevel] = useState(0);
   const [cardData, setCardData] = useState<Record<string, any>>({});
   const [thumbsPlaced, setThumbsPlaced] = useState({ left: false, right: false });
+  const [birthDate, setBirthDate] = useState('');
+  const [zodiacSign, setZodiacSign] = useState('');
 
   const { toast } = useToast();
   const audioContextRef = useRef<AudioContext | null>(null);
   const oscillatorsRef = useRef<any>({ left: null, right: null });
   const gainNodeRef = useRef<any>(null);
+
+  const handleBirthDateSubmit = (date: string) => {
+    setBirthDate(date);
+    if (date) {
+      const sign = getZodiacSign(date);
+      setZodiacSign(sign);
+    }
+  };
 
   const handlePositionSelect = (position: any) => {
     if (selectedPosition?.id === position.id) {
@@ -185,6 +197,11 @@ const QuantumTarot = () => {
     )}>
       <div className="container mx-auto max-w-6xl">
         <Header />
+        
+        <BirthDateForm
+          onBirthDateSubmit={handleBirthDateSubmit}
+          birthDate={birthDate}
+        />
 
         <Card className={cn(
           "bg-black/40 backdrop-blur-lg",
@@ -215,6 +232,8 @@ const QuantumTarot = () => {
                 positions={positions}
                 selectedPosition={selectedPosition}
                 cardData={cardData}
+                birthDate={birthDate}
+                zodiacSign={zodiacSign}
               />
             </div>
           </CardContent>

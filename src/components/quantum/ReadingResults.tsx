@@ -2,14 +2,17 @@ import React from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { translations } from '@/data/translations';
 import { Card } from '@/components/ui/card';
+import { getAstrologicalReading } from '@/utils/astroUtils';
 
 interface ReadingResultsProps {
   positions: any[];
   selectedPosition: any;
   cardData: Record<string, any>;
+  birthDate: string;
+  zodiacSign: string;
 }
 
-const ReadingResults = ({ positions, selectedPosition, cardData }: ReadingResultsProps) => {
+const ReadingResults = ({ positions, selectedPosition, cardData, birthDate, zodiacSign }: ReadingResultsProps) => {
   const isMobile = useIsMobile();
 
   const getTranslatedPosition = (pos: any, lang: 'en' | 'es') => {
@@ -20,15 +23,26 @@ const ReadingResults = ({ positions, selectedPosition, cardData }: ReadingResult
     const cards = positions.map(pos => cardData[pos.id]).filter(Boolean);
     if (cards.length === 3) {
       return (
-        <Card className="mt-8 p-6 bg-black/40 border-purple-500/20">
-          <h3 className="text-lg font-semibold text-purple-300 mb-4">Combined Energy Reading</h3>
-          <p className="text-purple-100">
-            The {cards[0].name} in your past flows into the {cards[1].name} of your present moment, 
-            leading towards the {cards[2].name} in your future. This progression suggests a journey 
-            through quantum states of consciousness, where past experiences have shaped your current 
-            reality, and your present awareness is creating ripples into future possibilities.
-          </p>
-        </Card>
+        <div className="space-y-4">
+          <Card className="p-6 bg-black/40 border-purple-500/20">
+            <h3 className="text-lg font-semibold text-purple-300 mb-4">Combined Energy Reading</h3>
+            <p className="text-purple-100">
+              The {cards[0].name} in your past flows into the {cards[1].name} of your present moment, 
+              leading towards the {cards[2].name} in your future. This progression suggests a journey 
+              through quantum states of consciousness, where past experiences have shaped your current 
+              reality, and your present awareness is creating ripples into future possibilities.
+            </p>
+          </Card>
+          
+          {birthDate && (
+            <Card className="p-6 bg-black/40 border-purple-500/20">
+              <h3 className="text-lg font-semibold text-purple-300 mb-4">Astrological Insight</h3>
+              <p className="text-purple-100">
+                {getAstrologicalReading(zodiacSign, cardData)}
+              </p>
+            </Card>
+          )}
+        </div>
       );
     }
     return null;
@@ -47,7 +61,7 @@ const ReadingResults = ({ positions, selectedPosition, cardData }: ReadingResult
               }`}
             >
               <div className="space-y-2">
-                <h3 className="text-lg font-semibold" style={{ color: pos.color }}>
+                <h3 className="text-lg font-semibold" style={{ color: `rgb(var(--${pos.color}))` }}>
                   {getTranslatedPosition(pos, 'en').title} / {getTranslatedPosition(pos, 'es').title}
                 </h3>
                 

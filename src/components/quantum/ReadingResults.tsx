@@ -19,19 +19,45 @@ const ReadingResults = ({ positions, selectedPosition, cardData, birthDate, zodi
     return translations[lang].positions[pos.id as keyof typeof translations.en.positions];
   };
 
+  const getActionableAdvice = (cards: any[]) => {
+    if (!cards || cards.length < 3) return "";
+    
+    const [past, present, future] = cards;
+    
+    return `
+      Based on your reading, consider these actions:
+      1. Release: ${past.name} suggests letting go of ${past.name === "The Tower" ? "rigid structures" : "past limitations"}. 
+         Practice: Take 10 minutes daily for reflection and release old patterns.
+      
+      2. Present Focus: The ${present.name} calls for ${present.name === "The Hermit" ? "introspection" : "active engagement"}. 
+         Practice: Set aside time each day to ${present.name === "The High Priestess" ? "meditate and listen to your intuition" : "take concrete steps toward your goals"}.
+      
+      3. Future Potential: ${future.name} indicates ${future.name === "The World" ? "completion and new beginnings" : "emerging opportunities"}. 
+         Practice: Create a vision board or journal about your desired outcome.
+    `;
+  };
+
   const getCombinedReading = () => {
     const cards = positions.map(pos => cardData[pos.id]).filter(Boolean);
     if (cards.length === 3) {
       return (
         <div className="space-y-4">
           <Card className="p-6 bg-black/40 border-purple-500/20">
-            <h3 className="text-lg font-semibold text-purple-300 mb-4">Combined Energy Reading</h3>
+            <h3 className="text-lg font-semibold text-purple-300 mb-4">Quantum Energy Reading</h3>
             <p className="text-purple-100">
               The {cards[0].name} in your past flows into the {cards[1].name} of your present moment, 
               leading towards the {cards[2].name} in your future. This progression suggests a journey 
               through quantum states of consciousness, where past experiences have shaped your current 
               reality, and your present awareness is creating ripples into future possibilities.
             </p>
+            <div className="mt-4 text-purple-100">
+              <h4 className="font-semibold mb-2">Energy Flow Analysis:</h4>
+              <p>
+                Your quantum state shows a progression from {cards[0].quantum} through {cards[1].quantum}, 
+                moving towards {cards[2].quantum}. This indicates a natural evolution of your energy field 
+                and consciousness.
+              </p>
+            </div>
           </Card>
           
           {birthDate && (
@@ -42,6 +68,13 @@ const ReadingResults = ({ positions, selectedPosition, cardData, birthDate, zodi
               </p>
             </Card>
           )}
+
+          <Card className="p-6 bg-black/40 border-purple-500/20">
+            <h3 className="text-lg font-semibold text-purple-300 mb-4">Actionable Guidance</h3>
+            <div className="text-purple-100 whitespace-pre-line">
+              {getActionableAdvice(cards)}
+            </div>
+          </Card>
         </div>
       );
     }

@@ -25,50 +25,47 @@ const ReadingResults = ({ positions, selectedPosition, cardData, birthDate, zodi
     const [past, present, future] = cards;
     
     const getPastAdvice = (card: any) => {
-      const baseAdvice = card.name === "The Tower" ? 
-        "embrace the dissolution of old structures" : 
-        "acknowledge and release past patterns";
+      const orientation = card.isReversed ? "reversed" : "upright";
+      const meaning = card.isReversed ? card.reversedMeaning : card.meaning;
       
       return `
-        Your past card (${card.name}) reveals deep quantum entanglement with previous experiences.
-        Key Practice: Spend 15 minutes each morning in contemplative release work.
-        - Write down what you're ready to let go
-        - Visualize these patterns dissolving into quantum potential
-        - Focus on the feeling of lightness as you release
+        Your past card (${card.name} - ${orientation}) reveals: ${meaning}
         
-        Remember: ${card.quantum} energy supports this transformation.
+        Practice for Past Energy:
+        - Spend 15 minutes each morning in contemplative release work
+        - Focus on the ${card.quantum} frequency for transformation
+        - Journal about past patterns that ${card.isReversed ? "need healing" : "support your growth"}
+        - Set intentions aligned with ${meaning}
       `;
     };
 
     const getPresentAdvice = (card: any) => {
-      const focusType = card.name === "The Hermit" ? 
-        "inner wisdom and solitude" : 
-        "active participation in your current reality";
+      const orientation = card.isReversed ? "reversed" : "upright";
+      const meaning = card.isReversed ? card.reversedMeaning : card.meaning;
       
       return `
-        Your present moment (${card.name}) calls for deep alignment with ${focusType}.
-        Daily Practice: Create a 20-minute sacred space for presence.
-        - Set intentions aligned with ${card.quantum}
-        - Observe your thoughts without attachment
-        - Connect with your body's natural frequencies
-        - Journal about synchronicities you notice
+        Your present moment (${card.name} - ${orientation}) indicates: ${meaning}
+        
+        Daily Practice:
+        - Create sacred space for ${card.isReversed ? "healing and rebalancing" : "growth and alignment"}
+        - Work with the ${card.quantum} frequency
+        - Practice mindfulness with focus on ${meaning}
+        - Document synchronicities related to your current situation
       `;
     };
 
     const getFutureAdvice = (card: any) => {
-      const potentialType = card.name === "The World" ? 
-        "completion and new cycles" : 
-        "emerging quantum possibilities";
+      const orientation = card.isReversed ? "reversed" : "upright";
+      const meaning = card.isReversed ? card.reversedMeaning : card.meaning;
       
       return `
-        Your future card (${card.name}) points toward ${potentialType}.
-        Manifestation Practice:
-        - Create a detailed vision board representing your desired outcomes
-        - Spend time daily energetically connecting with these possibilities
-        - Notice and document signs that align with your vision
-        - Stay open to unexpected quantum alignments
+        Your future potential (${card.name} - ${orientation}) suggests: ${meaning}
         
-        Work with the ${card.quantum} frequency to amplify your intentions.
+        Manifestation Practice:
+        - Visualize outcomes aligned with ${meaning}
+        - Work with ${card.quantum} energy for manifestation
+        - Create affirmations that address ${card.isReversed ? "potential challenges" : "emerging opportunities"}
+        - Set concrete steps toward your desired future
       `;
     };
 
@@ -84,7 +81,7 @@ const ReadingResults = ({ positions, selectedPosition, cardData, birthDate, zodi
       3. Future Potential:
       ${getFutureAdvice(future)}
       
-      Remember: These practices work with quantum field coherence. Consistency and intention are key to shifting your energy patterns.
+      Remember: These practices work with quantum field coherence. The orientation of each card (upright or reversed) provides additional insight into the energies at play. Work with both challenging and supportive aspects to create holistic transformation.
     `;
   };
 
@@ -134,7 +131,7 @@ const ReadingResults = ({ positions, selectedPosition, cardData, birthDate, zodi
                 {cardData[pos.id] ? (
                   <div className="space-y-1.5">
                     <div className="text-base font-bold text-white">
-                      {cardData[pos.id].name}
+                      {cardData[pos.id].name} {cardData[pos.id].isReversed ? "(Reversed)" : ""}
                     </div>
                     <div className="text-xs text-purple-300">
                       {cardData[pos.id].quantum}
@@ -143,15 +140,10 @@ const ReadingResults = ({ positions, selectedPosition, cardData, birthDate, zodi
                       {cardData[pos.id].astro}
                     </div>
                     <div className="mt-4 text-sm text-purple-200">
-                      {pos.id === 'past' && (
-                        "This energy from your past continues to influence your quantum state, creating interference patterns in your present reality."
-                      )}
-                      {pos.id === 'present' && (
-                        "Your current quantum state represents a moment of conscious observation, collapsing possibilities into your present experience."
-                      )}
-                      {pos.id === 'future' && (
-                        "This potential future timeline represents one of many quantum possibilities, influenced by your present choices and observations."
-                      )}
+                      {cardData[pos.id].isReversed ? 
+                        cardData[pos.id].reversedMeaning :
+                        cardData[pos.id].meaning
+                      }
                     </div>
                   </div>
                 ) : (

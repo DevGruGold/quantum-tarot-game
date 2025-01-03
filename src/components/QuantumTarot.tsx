@@ -9,6 +9,7 @@ import QuantumTimeline from './quantum/QuantumTimeline';
 import ReadingResults from './quantum/ReadingResults';
 import ThumbprintArea from './quantum/ThumbprintArea';
 import BirthDateForm from './quantum/BirthDateForm';
+import DrawingInstructions from './quantum/DrawingInstructions';
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -193,7 +194,7 @@ const QuantumTarot = () => {
     <div className={cn(
       "min-h-screen py-8 px-4",
       "bg-gradient-to-b from-gray-900 via-purple-900 to-gray-900",
-      "text-gray-50" // Changed to ensure light text on dark background
+      "text-gray-50"
     )}>
       <div className="container mx-auto max-w-6xl">
         <Header />
@@ -207,7 +208,7 @@ const QuantumTarot = () => {
           "bg-black/40 backdrop-blur-lg",
           "border border-purple-500/20",
           "shadow-2xl shadow-purple-500/10",
-          "text-gray-50" // Added to ensure light text
+          "text-gray-50"
         )}>
           <CardHeader className="border-b border-purple-500/20">
             <AudioControls
@@ -220,6 +221,14 @@ const QuantumTarot = () => {
 
           <CardContent className="p-6">
             <div className="space-y-8">
+              {selectedPosition && (
+                <DrawingInstructions
+                  isRunning={isRunning}
+                  resonanceLevel={resonanceLevel}
+                  thumbsPlaced={thumbsPlaced}
+                />
+              )}
+              
               <QuantumTimeline
                 positions={positions}
                 selectedPosition={selectedPosition}

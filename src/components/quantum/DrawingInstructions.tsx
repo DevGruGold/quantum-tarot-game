@@ -6,23 +6,32 @@ interface DrawingInstructionsProps {
   isRunning: boolean;
   resonanceLevel: number;
   thumbsPlaced: { left: boolean; right: boolean };
+  language: string;
 }
 
-const DrawingInstructions = ({ isRunning, resonanceLevel, thumbsPlaced }: DrawingInstructionsProps) => {
+const DrawingInstructions = ({ isRunning, resonanceLevel, thumbsPlaced, language }: DrawingInstructionsProps) => {
   const getInstructionText = () => {
     if (!thumbsPlaced.left || !thumbsPlaced.right) {
-      return "Place both thumbs on the quantum sensors below";
+      return language === 'en' 
+        ? "Place both thumbs on the quantum sensors below"
+        : "Coloca ambos pulgares en los sensores cuánticos de abajo";
     }
     if (resonanceLevel < 0.3) {
-      return "Focus your intention on the selected timeline position...";
+      return language === 'en'
+        ? "Focus your intention on the selected timeline position..."
+        : "Concentra tu intención en la posición seleccionada de la línea temporal...";
     }
     if (resonanceLevel < 0.6) {
-      return "Feel the quantum frequencies aligning...";
+      return language === 'en'
+        ? "Feel the quantum frequencies aligning..."
+        : "Siente las frecuencias cuánticas alineándose...";
     }
     if (resonanceLevel < 0.9) {
-      return "Your card is materializing...";
+      return language === 'en'
+        ? "Your card is materializing..."
+        : "Tu carta se está materializando...";
     }
-    return "Reading complete!";
+    return language === 'en' ? "Reading complete!" : "¡Lectura completa!";
   };
 
   return (
@@ -62,7 +71,7 @@ const DrawingInstructions = ({ isRunning, resonanceLevel, thumbsPlaced }: Drawin
               }}
               className="mt-4 text-sm text-purple-300"
             >
-              Resonance Level: {Math.round(resonanceLevel * 100)}%
+              {language === 'en' ? "Resonance Level" : "Nivel de Resonancia"}: {Math.round(resonanceLevel * 100)}%
             </motion.div>
           )}
         </motion.div>

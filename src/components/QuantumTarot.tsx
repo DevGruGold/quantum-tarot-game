@@ -229,6 +229,7 @@ const QuantumTarot = () => {
                   isRunning={isRunning}
                   resonanceLevel={resonanceLevel}
                   thumbsPlaced={thumbsPlaced}
+                  language={language}
                 />
               )}
               

@@ -9,16 +9,20 @@ interface ReadingResultsProps {
   selectedPosition: any;
   cardData: Record<string, any>;
   birthDate: string;
+  secondBirthDate?: string;
   zodiacSign: string;
-  language: string;  // Added language prop
+  secondZodiacSign?: string;
+  language: string;
 }
 
 const ReadingResults = ({ 
   positions, 
   selectedPosition, 
   cardData, 
-  birthDate, 
+  birthDate,
+  secondBirthDate,
   zodiacSign,
+  secondZodiacSign,
   language 
 }: ReadingResultsProps) => {
   const isMobile = useIsMobile();
@@ -100,15 +104,29 @@ const ReadingResults = ({
         <div className="space-y-4">
           {birthDate && (
             <Card className="p-6 bg-black/40 border-purple-500/20">
-              <h3 className="text-lg font-semibold text-purple-300 mb-4">Astrological Insight</h3>
+              <h3 className="text-lg font-semibold text-purple-300 mb-4">
+                {language === 'en' ? "Astrological Insight" : "Perspectiva Astrológica"}
+              </h3>
               <p className="text-purple-100">
                 {getAstrologicalReading(zodiacSign, cardData)}
               </p>
+              {secondBirthDate && secondZodiacSign && (
+                <div className="mt-4 pt-4 border-t border-purple-500/20">
+                  <h4 className="text-md font-semibold text-purple-300 mb-2">
+                    {language === 'en' ? "Second Person's Reading" : "Lectura de la Segunda Persona"}
+                  </h4>
+                  <p className="text-purple-100">
+                    {getAstrologicalReading(secondZodiacSign, cardData)}
+                  </p>
+                </div>
+              )}
             </Card>
           )}
 
           <Card className="p-6 bg-black/40 border-purple-500/20">
-            <h3 className="text-lg font-semibold text-purple-300 mb-4">Quantum Guidance & Practice</h3>
+            <h3 className="text-lg font-semibold text-purple-300 mb-4">
+              {language === 'en' ? "Quantum Guidance & Practice" : "Guía y Práctica Cuántica"}
+            </h3>
             <div className="text-purple-100 whitespace-pre-line">
               {getActionableAdvice(cards)}
             </div>

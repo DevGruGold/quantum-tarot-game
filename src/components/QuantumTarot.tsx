@@ -47,7 +47,9 @@ const QuantumTarot = () => {
   const [cardData, setCardData] = useState<Record<string, any>>({});
   const [thumbsPlaced, setThumbsPlaced] = useState({ left: false, right: false });
   const [birthDate, setBirthDate] = useState('');
+  const [secondBirthDate, setSecondBirthDate] = useState('');
   const [zodiacSign, setZodiacSign] = useState('');
+  const [secondZodiacSign, setSecondZodiacSign] = useState('');
   const [language, setLanguage] = useState('en');
 
   const { toast } = useToast();
@@ -55,11 +57,20 @@ const QuantumTarot = () => {
   const oscillatorsRef = useRef<any>({ left: null, right: null });
   const gainNodeRef = useRef<any>(null);
 
-  const handleBirthDateSubmit = (date: string) => {
+  const handleBirthDateSubmit = (date: string, secondDate?: string) => {
     setBirthDate(date);
+    if (secondDate !== undefined) {
+      setSecondBirthDate(secondDate);
+    }
+    
     if (date) {
       const sign = getZodiacSign(date);
       setZodiacSign(sign);
+    }
+    
+    if (secondDate) {
+      const secondSign = getZodiacSign(secondDate);
+      setSecondZodiacSign(secondSign);
     }
   };
 
@@ -203,6 +214,7 @@ const QuantumTarot = () => {
         <BirthDateForm
           onBirthDateSubmit={handleBirthDateSubmit}
           birthDate={birthDate}
+          secondBirthDate={secondBirthDate}
           language={language}
           onLanguageChange={setLanguage}
         />
@@ -248,7 +260,9 @@ const QuantumTarot = () => {
                 selectedPosition={selectedPosition}
                 cardData={cardData}
                 birthDate={birthDate}
+                secondBirthDate={secondBirthDate}
                 zodiacSign={zodiacSign}
+                secondZodiacSign={secondZodiacSign}
                 language={language}
               />
             </div>

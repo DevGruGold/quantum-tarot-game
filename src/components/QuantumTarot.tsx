@@ -48,6 +48,7 @@ const QuantumTarot = () => {
   const [thumbsPlaced, setThumbsPlaced] = useState({ left: false, right: false });
   const [birthDate, setBirthDate] = useState('');
   const [zodiacSign, setZodiacSign] = useState('');
+  const [language, setLanguage] = useState('en');
 
   const { toast } = useToast();
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -134,8 +135,8 @@ const QuantumTarot = () => {
     setResonanceLevel(0);
     
     toast({
-      title: "Reading initiated",
-      description: "The frequencies are aligning...",
+      title: language === 'en' ? "Reading initiated" : "Lectura iniciada",
+      description: language === 'en' ? "The frequencies are aligning..." : "Las frecuencias se están alineando...",
     });
   };
 
@@ -197,11 +198,13 @@ const QuantumTarot = () => {
       "text-gray-50"
     )}>
       <div className="container mx-auto max-w-6xl">
-        <Header />
+        <Header language={language} />
         
         <BirthDateForm
           onBirthDateSubmit={handleBirthDateSubmit}
           birthDate={birthDate}
+          language={language}
+          onLanguageChange={setLanguage}
         />
 
         <Card className={cn(
@@ -236,6 +239,7 @@ const QuantumTarot = () => {
                 cardData={cardData}
                 resonanceLevel={resonanceLevel}
                 onSelectPosition={handlePositionSelect}
+                language={language}
               />
 
               <ReadingResults
@@ -244,6 +248,7 @@ const QuantumTarot = () => {
                 cardData={cardData}
                 birthDate={birthDate}
                 zodiacSign={zodiacSign}
+                language={language}
               />
             </div>
           </CardContent>

@@ -9,6 +9,7 @@ interface QuantumTimelineProps {
   cardData: Record<string, any>;
   resonanceLevel: number;
   onSelectPosition: (position: any) => void;
+  language: string;  // Added language prop
 }
 
 const QuantumTimeline = ({
@@ -17,7 +18,8 @@ const QuantumTimeline = ({
   time,
   cardData,
   resonanceLevel,
-  onSelectPosition
+  onSelectPosition,
+  language
 }: QuantumTimelineProps) => {
   return (
     <div className={cn(

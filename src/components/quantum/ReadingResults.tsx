@@ -10,9 +10,17 @@ interface ReadingResultsProps {
   cardData: Record<string, any>;
   birthDate: string;
   zodiacSign: string;
+  language: string;  // Added language prop
 }
 
-const ReadingResults = ({ positions, selectedPosition, cardData, birthDate, zodiacSign }: ReadingResultsProps) => {
+const ReadingResults = ({ 
+  positions, 
+  selectedPosition, 
+  cardData, 
+  birthDate, 
+  zodiacSign,
+  language 
+}: ReadingResultsProps) => {
   const isMobile = useIsMobile();
 
   const getTranslatedPosition = (pos: any, lang: 'en' | 'es') => {
@@ -125,7 +133,7 @@ const ReadingResults = ({ positions, selectedPosition, cardData, birthDate, zodi
             >
               <div className="space-y-2">
                 <h3 className="text-lg font-semibold" style={{ color: `rgb(var(--${pos.color}))` }}>
-                  {getTranslatedPosition(pos, 'en').title} / {getTranslatedPosition(pos, 'es').title}
+                  {getTranslatedPosition(pos, language as 'en' | 'es').title}
                 </h3>
                 
                 {cardData[pos.id] ? (
@@ -149,10 +157,7 @@ const ReadingResults = ({ positions, selectedPosition, cardData, birthDate, zodi
                 ) : (
                   <div className="space-y-1">
                     <p className="text-purple-200/60 text-xs">
-                      {getTranslatedPosition(pos, 'en').description}
-                    </p>
-                    <p className="text-purple-200/60 text-xs">
-                      {getTranslatedPosition(pos, 'es').description}
+                      {getTranslatedPosition(pos, language as 'en' | 'es').description}
                     </p>
                   </div>
                 )}

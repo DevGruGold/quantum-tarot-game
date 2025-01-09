@@ -121,7 +121,6 @@ export const QuantumProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setIsRunning(true);
       startAudio(position);
       setResonanceLevel(0);
-      startReading();
     }
   };
 
